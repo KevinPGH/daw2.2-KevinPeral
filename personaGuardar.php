@@ -6,7 +6,9 @@ $conexionBD = obtenerPdoConexionBD();
 // Se recogen los datos del formulario de la request.
 $id = (int)$_REQUEST["id"];
 $nombre = $_REQUEST["nombre"];
+$apellidos = $_REQUEST["apellidos"];
 $telefono = $_REQUEST["telefono"];
+
 
 // Si id es -1 quieren CREAR una nueva entrada ($nueva_entrada tomará true).
 // Sin embargo, si id NO es -1 quieren VER la ficha de una categoría existente
@@ -15,13 +17,13 @@ $nuevaEntrada = ($id == -1);
 
 if ($nuevaEntrada) {
     // Quieren CREAR una nueva entrada, así que es un INSERT.
-    $sql = "INSERT INTO persona (nombre, telefono) VALUES (?, ?)";
-    $parametros = [$nombre, $telefono];
+    $sql = "INSERT INTO persona (nombre, apellidos, telefono) VALUES (?, ?, ?)";
+    $parametros = [$nombre, $apellido, $telefono];
 } else {
     // Quieren MODIFICAR una categoría existente y es un UPDATE.
-    $sql = "UPDATE persona SET nombre=?, telefono=? WHERE id=?";
+    $sql = "UPDATE persona SET nombre=?, apellidos=?, telefono=? WHERE id=?";
 
-    $parametros = [$nombre, $telefono, $id];
+    $parametros = [$nombre, $apellidos, $telefono, $id];
 }
 
 $sentencia = $conexionBD->prepare($sql);

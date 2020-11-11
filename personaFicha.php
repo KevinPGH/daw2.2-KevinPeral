@@ -13,9 +13,17 @@ $nuevaEntrada = ($id == -1);
 
 if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan datos.
     $personaNombre = "<introduzca nombre>";
+    $personaApellidos = "<Introduzca apellidos>";
     $personaTelefono = "<introduzca telefono>";
+
+    $sql = "SELECT nombre FROM categoria WHERE id=?";
+
+    $select = $conexion->prepare($sql);
+    $select->execute([$id]); // Se añade el parámetro a la consulta preparada.
+    $rs = $select->fetchAll();
+
 } else { // Quieren VER la ficha de una categoría existente, cuyos datos se cargan.
-    $sql = "SELECT nombre, telefono FROM persona WHERE id=?";
+    $sql = "SELECT p.nombre, p.apellidos, p.telefono, c.nombre as cNombre FROM persona as p, categoria as c WHERE p.id=?";
 
     $select = $conexion->prepare($sql);
     $select->execute([$id]); // Se añade el parámetro a la consulta preparada.
@@ -23,6 +31,7 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
 
     // Con esto, accedemos a los datos de la primera (y esperemos que única) fila que haya venido.
     $personaNombre = $rs[0]["nombre"];
+    $personaApellidos = $rs[0]["apellidos"];
     $personaTelefono = $rs[0]["telefono"];
 
 }
@@ -60,7 +69,13 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
         <li>
             <strong>Nombre: </strong>
             <input type='text' name='nombre' value='<?=$personaNombre?>' />
+            <input type='text' name='apellidos' value='<?=$personaApellidos?>' />
             <input type='text' name='telefono' value='<?=$personaTelefono?>' />
+            <select value = " "name="categoria">
+                <?php foreach ($rs as $fila) { ?>
+                <<option><?=$fila["cNombre"]?></option>
+                <?php } ?>
+            </select>
         </li>
     </ul>
 
