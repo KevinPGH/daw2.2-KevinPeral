@@ -15,15 +15,12 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
     $personaNombre = "<introduzca nombre>";
     $personaApellidos = "<Introduzca apellidos>";
     $personaTelefono = "<introduzca telefono>";
+    $personaEstrella = false;
+    $personaCategoriaId= 0;
 
-    $sql = "SELECT nombre FROM categoria WHERE id=?";
-
-    $select = $conexion->prepare($sql);
-    $select->execute([$id]); // Se añade el parámetro a la consulta preparada.
-    $rs = $select->fetchAll();
 
 } else { // Quieren VER la ficha de una categoría existente, cuyos datos se cargan.
-    $sql = "SELECT p.nombre, p.apellidos, p.telefono, c.nombre as cNombre FROM persona as p, categoria as c WHERE p.id=?";
+    $sql = "SELECT * FROM persona WHERE id=?";
 
     $select = $conexion->prepare($sql);
     $select->execute([$id]); // Se añade el parámetro a la consulta preparada.
@@ -33,8 +30,17 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
     $personaNombre = $rs[0]["nombre"];
     $personaApellidos = $rs[0]["apellidos"];
     $personaTelefono = $rs[0]["telefono"];
+    $personaEstrella = ($rs[0]["estrella"]==1);
+    $personaCategoriaId = $rs[0]["categoriaId"];
 
 }
+// Con lo siguiente se deja preparado un recordset con todas las categorías.
+
+$sqlCategorias = "SELECT id, nombre FROM categoria ORDER BY nombre";
+
+$select = $conexion->prepare($sqlCategorias);
+$select->execute([]); // Array vacío porque la consulta preparada no requiere parámetros.
+$rsCategorias = $select->fetchAll();
 
 
 
@@ -69,15 +75,37 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
         <li>
             <strong>Nombre: </strong>
             <input type='text' name='nombre' value='<?=$personaNombre?>' />
+        </li>
+        <li>
+            <strong>Apellido: </strong>
             <input type='text' name='apellidos' value='<?=$personaApellidos?>' />
+        </li>
+        <li>
+            <strong>Telefono: </strong>
             <input type='text' name='telefono' value='<?=$personaTelefono?>' />
-            <select value = " "name="categoria">
-                <?php foreach ($rs as $fila) { ?>
-                <<option><?=$fila["cNombre"]?></option>
-                <?php } ?>
+        </li>
+        <li>
+            <strong>Categoria: </strong>
+            <select name="categoriaId">
+
+                <?php foreach ($rsCategorias as $filaCategoria) {
+                    $categoriaId = (int)$filaCategoria["id"];
+                    $categoriaNombre = $filaCategoria["nombre"];
+
+                    if ($categoriaId == $personaCategoriaId) $seleccion = "selected-'true'";
+                    else                                     $seleccion = "";
+
+                    echo "<option value='$categoriaId' $seleccion>$categoriaNombre</option>";
+                }
+                ?>
+
             </select>
         </li>
-    </ul>
+        <li>
+            <strong>Favoritos</strong>
+            <input type="checkbox" name="estrella" <?= $personaEstrella ? "checked" : "" ?> />
+        </li>
+        <br>
 
     <?php if ($nuevaEntrada) { ?>
         <input type='submit' name='crear' value='Crear persona' />
@@ -87,7 +115,7 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
 
 </form>
 
-<br />
+<br>
 
 <a href='personaEliminar.php?id=<?=$id?>'>Eliminar persona</a>
 
