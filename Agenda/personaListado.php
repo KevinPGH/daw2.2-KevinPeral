@@ -4,6 +4,11 @@ require_once "varios.php";
 $conexionBD = obtenerPdoConexionBD();
 
 session_start();
+
+if (isset($_REQUEST[$_SESSION["fondo"]])){
+    $_SESSION["fondo"] = $_REQUEST["fondo"];
+}
+
 if(isset($_REQUEST["soloEstrellas"])){
     $_SESSION["soloEstrellas"] = true;
 }
@@ -42,13 +47,18 @@ $rs = $select->fetchAll();
 
 
 
+
 <html>
 
 <head>
     <meta charset='UTF-8'>
 </head>
 
-
+<style>
+    body{
+        background-color: <?= $_SESSION["fondo"]; ?>;
+    }
+</style>
 
 <body>
 

@@ -35,4 +35,5 @@ function syso(string $contenido)
 {
     file_put_contents('php://stderr', $contenido . "\n");
 }
+
 ?>

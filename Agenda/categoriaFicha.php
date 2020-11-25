@@ -3,9 +3,21 @@ require_once "varios.php";
 
 $conexion = obtenerPdoConexionBD();
 
+
+session_start();
+if (isset($_REQUEST[$_SESSION["fondo"]])){
+    $_SESSION["fondo"] = $_REQUEST["fondo"];
+}
+
 // Se recoge el parámetro "id" de la request.
 $id = (int)$_REQUEST["id"];
 
+
+$sql = "SELECT * FROM persona WHERE categoriaId=? ORDER BY nombre";
+
+$select = $conexion->prepare($sql);
+$select->execute([$id]); // Array vacío porque la consulta preparada no requiere parámetros.
+$rsPersonasDeLaCategoria = $select->fetchAll();
 // Si id es -1 quieren CREAR una nueva entrada ($nueva_entrada tomará true).
 // Sin embargo, si id NO es -1 quieren VER la ficha de una categoría existente
 // (y $nueva_entrada tomará false).
@@ -36,6 +48,11 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
 <html>
 
 <head>
+    <style>
+        body{
+            background-color: <?= $_SESSION["fondo"]; ?> ;
+        }
+    </style>
     <meta charset='UTF-8'>
 </head>
 
@@ -60,6 +77,15 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
         </li>
     </ul>
 
+    <p>Personas que pertenecen actualmente a la categoría:</p>
+
+    <ul>
+        <?php
+        foreach ($rsPersonasDeLaCategoria as $fila) {
+            echo "<li>$fila[nombre] $fila[apellidos]</li>";
+        }
+        ?>
+    </ul>
     <?php if ($nuevaEntrada) { ?>
         <input type='submit' name='crear' value='Crear categoría' />
     <?php } else { ?>
