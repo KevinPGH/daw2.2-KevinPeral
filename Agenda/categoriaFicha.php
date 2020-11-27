@@ -4,10 +4,8 @@ require_once "varios.php";
 $conexion = obtenerPdoConexionBD();
 
 
-session_start();
-if (isset($_REQUEST[$_SESSION["fondo"]])){
-    $_SESSION["fondo"] = $_REQUEST["fondo"];
-}
+recogerTema();
+
 
 // Se recoge el parámetro "id" de la request.
 $id = (int)$_REQUEST["id"];

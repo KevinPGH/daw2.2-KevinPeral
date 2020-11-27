@@ -3,11 +3,7 @@ require_once "varios.php";
 
 $conexionBD = obtenerPdoConexionBD();
 
-session_start();
-
-if (isset($_REQUEST[$_SESSION["fondo"]])){
-    $_SESSION["fondo"] = $_REQUEST["fondo"];
-}
+recogerTema();
 
 if(isset($_REQUEST["soloEstrellas"])){
     $_SESSION["soloEstrellas"] = true;

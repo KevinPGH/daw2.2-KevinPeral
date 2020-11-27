@@ -1,12 +1,8 @@
 <?php
 require_once "varios.php";
 
-session_start();
-if (!isset($_SESSION["fondo"]) && !isset($_REQUEST["fondo"])){
-    $_SESSION["fondo"] = "";
-}else if (isset($_REQUEST["fondo"])){
-    $_SESSION["fondo"] = $_REQUEST["fondo"];
-}
+establecerTema();
+
 $conexionBD = obtenerPdoConexionBD();
 
 // Los campos que incluyo en el SELECT son los que luego podré leer
@@ -70,10 +66,11 @@ $rs = $select->fetchAll();
 <br>
 
 
+<p>
     <a href='categoriaListado.php?fondo=grey'>Oscuro</a>
     <a href='categoriaListado.php?fondo=white'>Blanco</a>
     <a href='categoriaListado.php?fondo=dodgerblue'>Azul</a>
     <a href='categoriaListado.php?fondo=beige'>Crema</a>
-
+</p>
 
 </body>
