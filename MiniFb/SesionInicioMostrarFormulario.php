@@ -29,9 +29,12 @@ require_once "_Varios.php";
         <label>Contraseña</label>
         <input type="password" name="contrasenna" required />
     </div>
+    <label for="recordarme">Recuerdame</label><input type="checkbox" name="recordarme" id="recordarme">
+    <br>
     <button type="submit" name="login" value="login">Log In</button>
 
-    <a href="FormularioNuevoUsuario.php">Crear Nuevo Usuario</a>
+<br><br>
+    <a href="FormularioNuevoUsuario.php">Crear cuenta</a>
 </form>
 
 </body>

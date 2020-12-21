@@ -4,7 +4,7 @@ require_once "_Varios.php";
 
 
 
-if (!haySesionIniciada()){
+if (!haySesionIniciada() && !intentarCanjearCodigoCookie()){
     redireccionar("SesionInicioMostrarFormulario.php");
 }
 
@@ -21,10 +21,7 @@ if (!haySesionIniciada()){
 
 <header>
 
-    <p> Has iniciado sesion como <?= $_SESSION["identificador"] ?></p>
-    <?php if (haySesionIniciada()){ ?>
-        <a href="SesionCerrar.php">Cerrar Sesion</a>
-    <?php } ?>
+    <?php pintarInfoSesion()?>
 
 </header>
 

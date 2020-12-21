@@ -26,6 +26,8 @@ function obtenerPdoConexionBD(): PDO
 
 session_start();
 
+
+
 function obtenerUsuario(string $identificador, string $contrasenna): ? array
 {
     // TODO Pendiente hacer.
@@ -46,6 +48,8 @@ function obtenerUsuario(string $identificador, string $contrasenna): ? array
 
 }
 
+
+
     function marcarSesionComoIniciada(array $arrayUsuario)
     {
         // TODO Anotar en el post-it todos estos datos:
@@ -58,6 +62,8 @@ function obtenerUsuario(string $identificador, string $contrasenna): ? array
         $_SESSION["apellidos"] = $arrayUsuario["apellidos"];
     }
 
+
+
     function haySesionIniciada(): bool
     {
         // Está iniciada si isset($_SESSION["id"])
@@ -66,6 +72,8 @@ function obtenerUsuario(string $identificador, string $contrasenna): ? array
         }else
             return false;
     }
+
+
 
     function crearUsuario(array $nuevaCuenta)
     {
@@ -76,14 +84,76 @@ function obtenerUsuario(string $identificador, string $contrasenna): ? array
         $sentencia->execute([$nuevaCuenta[0], $nuevaCuenta[1], 0, $nuevaCuenta[2], $nuevaCuenta[3]]); // Se añaden los parámetros a la consulta preparada.
     }
 
+
+
+    function pintarInfoSesion()
+    {
+        if (haySesionIniciada()) {
+            echo "<span>Sesión iniciada por <a href='UsuarioPerfilVer.php'>$_SESSION[identificador]</a> ($_SESSION[nombre] $_SESSION[apellidos]) <a href='SesionCerrar.php'>Cerrar sesión</a></span>";
+        } else {
+            echo "<a href='SesionInicioMostrarFormulario.php'>Iniciar sesión</a>";
+        }
+    }
+
+
+
     function cerrarSesion()
     {
         session_destroy();
         unset($_SESSION);
     }
 
-// (Esta función no se utiliza en este proyecto pero se deja por si se optimizase el flujo de navegación.)
-// Esta función redirige a otra página y deja de ejecutar el PHP que la llamó:
+
+
+    function generarCodigoCookie(array $arrayUsuario)
+    {
+        $codigoCookie = generarCadenaAleatoria(32);
+
+        $sql = "UPDATE Usuario SET codigoCookie=? WHERE identificador=?";
+
+        $sentencia = obtenerPdoConexionBD()->prepare($sql);
+        $sentencia ->execute([$codigoCookie, $arrayUsuario["identificador"]]);
+
+        setcookie("codigoCookie", $codigoCookie);
+        setcookie("identificador", $arrayUsuario["identificador"]);
+    }
+
+
+
+    function intentarCanjearCodigoCookie():bool
+    {
+
+        if(!isset($_COOKIE["identificador"]) || !isset($_COOKIE["codigoCookie"]))
+        {
+            return false;
+        }
+
+        $codigoCookie = $_COOKIE["codigoCookie"];
+        $identificador = $_COOKIE["identificador"];
+
+        $sql= "SELECT * FROM Usuario WHERE identificador=? AND BINARY codigoCookie=?";
+        $select = obtenerPdoConexionBD()->prepare($sql);
+        $select->execute($codigoCookie, $identificador);
+
+        $rs = $select->fetchAll();
+
+
+        if ($select->rowCount() == 1) {
+            return true;
+        } else if ($select->rowCount() == 0) {
+            return false;
+        }
+    }
+
+
+
+    function generarCadenaAleatoria(int $longitud): string
+    {
+        for ($s = '', $i = 0, $z = strlen($a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') - 1; $i != $longitud; $x = rand(0, $z), $s .= $a[$x], $i++) ;
+        return $s;
+    }
+
+
     function redireccionar(string $url)
     {
         header("Location: $url");

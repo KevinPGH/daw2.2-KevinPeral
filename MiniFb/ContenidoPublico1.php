@@ -15,12 +15,7 @@ require_once "_Varios.php";
 
 <header>
 
-    <?php if (haySesionIniciada()){ ?>
-        <p> Has iniciado sesion como <?= $_SESSION["identificador"] ?></p>
-        <a href="SesionCerrar.php">Cerrar Sesion</a>
-    <?php }else{ ?>
-        <a href="SesionInicioMostrarFormulario.php"> Iniciar Sesion</a>
-    <?php } ?>
+    <?php pintarInfoSesion()?>
 
 </header>
 

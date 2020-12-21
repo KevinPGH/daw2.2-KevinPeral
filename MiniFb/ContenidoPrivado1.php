@@ -11,7 +11,7 @@
 
     // (Organizar estas comprobaciones en funciones en _Varios.php para evitar copypaste.)
 
-    if (!haySesionIniciada()) {
+    if (!haySesionIniciada() && !intentarCanjearCodigoCookie()) {
         // TODO Redirigir...
         redireccionar("SesionInicioMostrarFormulario.php");
     }
@@ -28,10 +28,7 @@
 
 <header>
 
-    <p> Has iniciado sesion como <?= $_SESSION["identificador"] ?></p>
-    <?php if (haySesionIniciada()){ ?>
-        <a href="SesionCerrar.php">Cerrar Sesion</a>
-    <?php } ?>
+    <?php pintarInfoSesion() ?>
 
 </header>
 
