@@ -1,24 +1,16 @@
 <?php
 
-require_once "_Varios.php";
+require_once "DAO.php";
 
-
-$identificador = $_REQUEST["identificador"];
-$contrasenna = $_REQUEST["contrasenna"];
+$arrayUsuario = DAO::obtenerUsuarioPorContrasenna($_REQUEST["identificador"], $_REQUEST["contrasenna"]);
 $recordarme = $_REQUEST["recordarme"];
 
-// TODO Verificar (usar funciones de _Varios.php) identificador y contrasenna recibidos y redirigir a ContenidoPrivado1 (si OK) o a iniciar sesión (si NO ok).
+if ($arrayUsuario) {
+    DAO::establecerSesionRam($arrayUsuario);
+    redireccionar("MuroVerGlobal.php");
+    if (isset($recordarme)) DAO::establecerSesionCookie($arrayUsuario);
 
-$arrayUsuario = obtenerUsuario($identificador, $contrasenna);
 
-if ($arrayUsuario)
-{ // HAN venido datos: identificador existía y contraseña era correcta.
-    marcarSesionComoIniciada($arrayUsuario);
-    redireccionar("ContenidoPrivado1.php?");
-    if(isset($recordarme)){
-        generarCodigoCookie();
-    }
-} else
-    {
-    redireccionar("SesionInicioMostrarFormulario.php");
-    }
+} else {
+    redireccionar("SesionInicioFormulario.php?datosErroneos");
+}

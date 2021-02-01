@@ -1,9 +1,7 @@
 <?php
 
-require_once "_Varios.php";
+require_once "DAO.php";
 
-cerrarSesion();
-    // TODO cerrar utilizando la función de _Varios.php y redirigir a contenido público 1.
-redireccionar("ContenidoPublico1.php");
+DAO::destruirSesionRamYCookie();
 
-?>
+redireccionar("Index.php");
