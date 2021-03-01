@@ -6,6 +6,7 @@ require_once "dao.php";
 $id = (int)$_REQUEST["id"];
 $nombre = $_REQUEST["nombre"];
 
+
 if ($id == -1)
 {
     DAO::categoriaCrear($nombre);

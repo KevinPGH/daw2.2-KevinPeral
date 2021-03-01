@@ -47,12 +47,16 @@ class Persona extends Dato
 {
     use Identificable;
 
-    private  string $nombre;
+    private string $nombre;
+    private string $apellidos;
+    private string $telefono;
 
-    public function __construct(int $id, string $nombre)
+    public function __construct(int $id, string $nombre, string $apellidos, string $telefono)
     {
         $this->setId($id);
         $this->setNombre($nombre);
+        $this->setApellidos($apellidos);
+        $this->setTelefono($telefono);
     }
 
     public function getNombre(): string
@@ -63,5 +67,25 @@ class Persona extends Dato
     public function setNombre(string $nombre)
     {
         $this->nombre = $nombre;
+    }
+
+    public function getApellidos(): String
+    {
+        return $this->apellidos;
+    }
+
+    public function setApellidos(string $apellidos)
+    {
+        $this->apellidos = $apellidos;
+    }
+
+    public function getTelefono(): String
+    {
+        return $this->telefono;
+    }
+
+    public function  setTelefono(string $telefono)
+    {
+        $this->telefono = $telefono;
     }
 }
