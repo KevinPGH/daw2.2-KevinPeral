@@ -1,0 +1,24 @@
+body {
+    background-color: darkslategrey;
+    color: white;
+}
+
+table, td, th {
+    border: 1px solid black;
+    padding: 15px;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+button {
+    text-align: left;
+}
+
+
+a:link, a:visited, a:active {
+    text-decoration: none;
+    color: white;
+}
