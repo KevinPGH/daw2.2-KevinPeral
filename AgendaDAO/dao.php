@@ -117,7 +117,7 @@ class DAO
 
     public static function personaCrearDesdeRs(array $fila): Persona
     {
-        return new Persona($fila["id"], $fila["nombre"], $fila["apellidos"], $fila["telefono"]);
+        return new Persona($fila["id"], $fila["nombre"], $fila["apellidos"], $fila["telefono"], $fila["estrella"], $fila["categoriaId"]);
     }
 
     public static function personaObtenerPorId(int $id): ?Persona
@@ -130,27 +130,27 @@ class DAO
         else return null;
     }
 
-    public static function personaActualizar($id, $nombre, $apellidos, $telefono)
+    public static function personaActualizar($id, $nombre, $apellidos, $telefono, $estrella, $categoriaId)
     {
         self::ejecutarActualizacion(
-            "UPDATE persona SET nombre=?, apellidos=?, telefono=? WHERE id=?",
-            [$nombre, $apellidos, $telefono, $id]
+            "UPDATE persona SET nombre=?, apellidos=?, telefono=?, estrella=?, categoriaId=? WHERE id=?",
+            [$nombre, $apellidos, $telefono, $estrella, $categoriaId, $id]
         );
     }
 
-    public static function personaCrear(string $nombre, string $apellidos, string $telefono)
+    public static function personaCrear(string $nombre, string $apellidos, string $telefono, int $estrella,int $categoriaId)
     {
         self::ejecutarActualizacion(
-            "INSERT INTO persona (nombre, apellidos, telefono) VALUES (?, ?, ?)",
-            [$nombre, $apellidos, $telefono]
+            "INSERT INTO persona (nombre, apellidos, telefono, estrella, categoriaId) VALUES (?, ?, ?, ?, ?)",
+            [$nombre, $apellidos, $telefono, $estrella, $categoriaId]
         );
     }
 
-    public static function personaObtenerTodas(): array
+    public static function personaObtenerTodas(string $posibleClausulaWhere): array
     {
         $datos = [];
         $rs = self::ejecutarConsulta(
-            "SELECT * FROM persona ORDER BY nombre",
+            "SELECT * FROM persona $posibleClausulaWhere ORDER BY nombre",
             []
         );
 
@@ -160,6 +160,23 @@ class DAO
         }
 
         return $datos;
+    }
+
+    public static function personaObtenerCategoria(int $id): string
+    {
+        $rs= self::ejecutarConsulta(
+            "SELECT nombre from Categoria WHERE id=?",
+            [$id]
+        );
+        return $rs[0]["nombre"];
+    }
+
+    public static function personaCambiarEstrella(int $id): bool
+    {
+        return self::ejecutarActualizacion(
+            "UPDATE Persona SET estrella = (NOT (SELECT  estrella FROM Persona WHERE id=?)) WHERE id=?",
+            [$id, $id]
+        );
     }
 
 

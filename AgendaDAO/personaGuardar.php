@@ -7,13 +7,14 @@ $id = (int)$_REQUEST["id"];
 $nombre = $_REQUEST["nombre"];
 $apellidos = $_REQUEST["apellidos"];
 $telefono = $_REQUEST["telefono"];
+$categoriaId = $_REQUEST["categoriaId"];
 
 if ($id == -1)
 {
-    DAO::personaCrear($nombre, $apellidos, $telefono);
+    DAO::personaCrear($nombre, $apellidos, $telefono, 0, $categoriaId);
 
 }else
-    DAO::personaActualizar($id, $nombre, $apellidos, $telefono);
+    DAO::personaActualizar($id, $nombre, $apellidos, $telefono, 0, $categoriaId);
 
 
 redireccionar("personaListado.php");

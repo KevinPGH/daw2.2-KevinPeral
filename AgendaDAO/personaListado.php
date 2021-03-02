@@ -4,7 +4,10 @@ require_once "dao.php";
 
 establecerTema();
 
-$personas = DAO::personaObtenerTodas();
+$posibleClausulaWhere = isset($_REQUEST["soloEstrellas"]) ? "WHERE estrella=1" : "";
+$personas = DAO::personaObtenerTodas($posibleClausulaWhere);
+
+$categorias = DAO::categoriaObtenerTodas();
 
 ?>
 
@@ -27,21 +30,30 @@ $personas = DAO::personaObtenerTodas();
 
 <h1>Listado de Personas</h1>
 
+
 <table border='1'>
 
     <tr>
         <th>Nombre</th>
         <th>Apellidos</th>
         <th>Telefono</th>
+        <th>Categoria</th>
         <th>Eliminar</th>
     </tr>
 
     <?php foreach ($personas as $persona) { ?>
+
         <tr>
-            <td><a href='PersonaFicha.php?id=<?=$persona->getId()?>'>    <?=$persona->getNombre()?> </a></td>
-            <td><a href='PersonaFicha.php?id=<?=$persona->getId()?>'>    <?=$persona->getApellidos()?> </a></td>
-            <td><a href='PersonaFicha.php?id=<?=$persona->getId()?>'>    <?=$persona->getTelefono()?> </a></td>
-            <td><a href='PersonaEliminar.php?id=<?=$persona->getId()?>'> (X) </a></td>
+           <?php $urlImagen = $persona->getEstrella() ? "img/estrellaRellena.png" : "img/estrellaVacia.png";
+           ?>
+
+            <td><a href='personaFicha.php?id=<?=$persona->getId()?>'>    <?=$persona->getNombre()?> </a>
+                <a href='personaEstablecerEstadoEstrella.php?id=<?=$persona->getId()?>'><img src='<?=$urlImagen?>' width='16' height='16'></a>
+            </td>
+            <td><a href='personaFicha.php?id=<?=$persona->getId()?>'>    <?=$persona->getApellidos()?> </a></td>
+            <td><a href='personaFicha.php?id=<?=$persona->getId()?>'>    <?=$persona->getTelefono()?> </a></td>
+            <td><a href='categoriaFicha.php?id=<?= $persona->getCategoriaId() ?>'> <?= DAO::personaObtenerCategoria($persona->getCategoriaId()); ?> </a></td>
+            <td><a href='personaEliminar.php?id=<?=$persona->getId()?>'> (X) </a></td>
         </tr>
     <?php } ?>
 
@@ -53,6 +65,14 @@ $personas = DAO::personaObtenerTodas();
 
 <br />
 <br />
+
+<?php if (!isset($_REQUEST["soloEstrellas"])) {?>
+    <a href='PersonaListado.php?soloEstrellas'>Mostrar solo contactos con estrella</a>
+<?php } else { ?>
+    <a href='PersonaListado.php?todos'>Mostrar todos los contactos</a>
+<?php } ?>
+
+<br><br>
 
 <a href='CategoriaListado.php?tema'>Gestionar listado de Personas</a>
 <br>

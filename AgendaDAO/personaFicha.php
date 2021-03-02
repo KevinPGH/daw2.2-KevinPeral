@@ -10,15 +10,20 @@ $id = (int)$_REQUEST["id"];
 
 
 $persona = DAO::personaObtenerPorId($id);
+$categorias = DAO::categoriaObtenerTodas();
 
 if ($persona == null) {
     $personaNombre = "<introduzca nombre>";
     $personaApellidos = "<introduzca apellidos>";
     $personaTelefono = "<introduzca telefono>";
+
 }else {
     $personaNombre = $persona->getNombre();
     $personaApellidos = $persona->getApellidos();
     $personaTelefono = $persona->getTelefono();
+    $personaEstrella = $persona->getEstrella();
+    $personaCategoriaId = $persona->getCategoriaId();
+
 }
 
 
@@ -69,18 +74,22 @@ if ($persona == null) {
             <strong>Telefono: </strong>
             <input type='text' name='telefono' value='<?=$personaTelefono?>' />
         </li>
-    </ul>
-    <!--
-    <p>Personas que pertenecen actualmente a la categoría:</p>
 
-    <ul>
-        <?//php
-    //foreach ($rsPersonasDeLaCategoria as $fila) {
-    //   echo "<li>$fila[nombre] $fila[apellidos]</li>";
-    // }
-    ?>
+        <li>
+            <strong>Categoria </strong>
+            <select name='categoriaId'>
+                <?php
+                foreach ($categorias as $categoria) {
+                        $categoriaId = $categoria->getId();
+                        $categoriaNombre = $categoria->getNombre();
+                        echo "<option value='$categoriaId' >$categoriaNombre</option>";
+                    }
+                ?>
+        </li>
+
+
     </ul>
-    -->
+
     <?php if ($persona==null) { ?>
         <input type='submit' name='crear' value='Crear persona' />
     <?php } else { ?>
